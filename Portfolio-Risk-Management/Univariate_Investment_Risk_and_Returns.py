@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import skew, kurtosis, shapiro
 
-StockPrices = pd.read_csv("/workspaces/Python/DataCamp/MSFTPrices.csv", parse_dates = ["Date"])
+StockPrices = pd.read_csv("/workspaces/Python/Portfolio-Risk-Management/MSFTPrices.csv", parse_dates = ["Date"])
 StockPrices = StockPrices.sort_values(by="Date")
 
 # Daily returns on adjusted close price
