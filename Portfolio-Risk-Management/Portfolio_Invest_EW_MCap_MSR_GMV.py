@@ -129,7 +129,7 @@ print(random_portfolios['Sharpe'].describe()[['min', 'max']])
 
 # Max Sharpe Ratio portfolio
 sorted_portfolios_s = random_portfolios.sort_values(by=['Sharpe'], ascending=False) # sort by sharpe ratios
-print(sorted_portfolios_s.head())
+
 MSR_weights = sorted_portfolios_s.iloc[0, 0:numstocks]
 MSR_weights_array = np.array(MSR_weights)
 
@@ -155,7 +155,7 @@ CumulativeReturns_GMV = ((1 + StockReturns["Portfolio_GMV"]).cumprod() - 1)
 
 
 
-# Compare the different portfolios
+# Plot the different portfolios
 CumulativeReturns_EW.plot()
 CumulativeReturns_MCap.plot()
 CumulativeReturns_MSR.plot()
