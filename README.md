@@ -1,3 +1,3 @@
 # Python
 
-Here you wil find projects I did with Python. I tried to keep each project (file) short and simple, each displaying different skills and functions.
+Here you wil find projects I did or am currently doing with Python. I try to keep each project (file) short and simple, each displaying different skills and functions.
