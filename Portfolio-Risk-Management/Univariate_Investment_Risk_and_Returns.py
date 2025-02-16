@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from scipy.stats import skew, kurtosis, shapiro
 
 # Import Data and make sure it is sorted by date
-StockPrices = pd.read_csv("/workspaces/Python/Portfolio-Risk-Management/MSFTPrices.csv", parse_dates = ["Date"])
+StockPrices = pd.read_csv("/workspaces/Python/Portfolio-Risk-Management/CSV/MSFTPrices.csv", parse_dates = ["Date"])
 StockPrices = StockPrices.sort_values(by="Date")
 
 
