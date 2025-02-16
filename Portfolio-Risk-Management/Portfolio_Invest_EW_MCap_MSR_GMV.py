@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
+# Import data
 StockReturns = pd.read_csv("/workspaces/Python/Portfolio-Risk-Management/Big9Returns2017.csv", index_col=["Date"])
 
 # Set portfolio weights
@@ -13,22 +14,26 @@ WeightedReturns = StockReturns.mul(portfolio_weights, axis=1)
 # Portfolio return
 StockReturns["Portfolio"] = WeightedReturns.sum(axis=1)
 
-# Calculate Cumulative Portfolio Returns for future use in plotting
+# Cumulative Portfolio Returns for future use in plotting
 CumulativeReturns = ((1 + StockReturns["Portfolio"]).cumprod() - 1)
 
 
-# Equally weighted portfolio
-# Set number of stocks in portfolio
-numstocks = 9
 
+# Set number of stocks in portfolio (will be used many times)
+numstocks = 9   
+
+
+
+# Equally weighted portfolio
 # Array of equal weights
 portfolio_weights_ew = np.repeat(1/numstocks, numstocks)  
 
 # Equally Weighted Portfolio Returns
 StockReturns["Portfolio_EW"] = StockReturns.iloc[:, 0:numstocks].mul(portfolio_weights_ew, axis=1).sum(axis=1)
 
-# Calculate Cumulative Portfolio Returns for future use in plotting
+# Cumulative Portfolio Returns for future use in plotting
 CumulativeReturns_EW = ((1 + StockReturns["Portfolio_EW"]).cumprod() - 1)
+
 
 
 # Market-cap weighted portfolio
@@ -41,22 +46,15 @@ mcap_weights = market_capitalizations / np.sum(market_capitalizations)
 # Market cap weighted portfolio returns
 StockReturns["Portfolio_MCap"] = StockReturns.iloc[:, 0:numstocks].mul(mcap_weights, axis=1).sum(axis=1)
 
-# Calculate Cumulative Portfolio Returns for future use in plotting
+# Cumulative Portfolio Returns for future use in plotting
 CumulativeReturns_MCap = ((1 + StockReturns["Portfolio_MCap"]).cumprod() - 1)
 
 
-# Plot the cumulative returns
-CumulativeReturns.plot()
-CumulativeReturns_EW.plot()
-CumulativeReturns_MCap.plot()
-plt.legend()
-plt.show()
 
-
-
+# Setting up the data for Max Sharpe Ratio and Global Minimum Variance Portfolios
 # The Correlation Matrix
-correlation_matrix = StockReturns.iloc[:, 0:numstocks].corr()
-#print(correlation_matrix)
+correlation_matrix = StockReturns.iloc[:, 0:numstocks].corr()   # taking only stock columns
+print(correlation_matrix)
 
 # Heatmap of the correlation matrix
 import seaborn as sns
@@ -65,29 +63,36 @@ plt.xticks(rotation=90)
 plt.yticks(rotation=0)
 plt.show()
 
+    # note: Amazon is most correlated with Facebook and Microsoft
+
 
 # The Covariance Matrix
 cov_mat = StockReturns.iloc[:, 0:numstocks].cov()
 cov_mat_annual = cov_mat * 252
-#print(cov_mat_annual)
+print(cov_mat_annual)
 
 
-# Portfolio standard deviation
+# Portfolio standard deviation (from first portfolio above)
 portfolio_volatility = np.sqrt(np.dot(portfolio_weights.T, np.dot(cov_mat_annual, portfolio_weights)))
-#print(portfolio_volatility)
+print('Portfolio volatility:', portfolio_volatility)
+
+    # result: The portfolio volatility is 8.93%
 
 
-# Create random portfolios for MSR portfolio
+
+# Markowitz Portfolios
+
+# Create random portfolios
+# Set seed for reproducibility
+np.random.seed(42)
+
 # Extract only stock columns
 stock_columns = StockReturns.columns[0:numstocks]
 
 # Historical mean returns (+ covariance matrix which we already have in cov_mat)
-mean_returns = StockReturns[stock_columns].mean()
+mean_annual_returns = StockReturns[stock_columns].mean() * 252
 
-# Make sure we always get the same random numbers
-# np.random.seed(1)
-
-# Number of portfolios
+# Number of portfolios generated
 num_portfolios = 10000
 
 # Storage for portfolio data
@@ -97,9 +102,9 @@ rd_volatilities = []
 
 # Generate the portfolios
 for i in range(num_portfolios):
-    weights = np.random.dirichlet(np.ones(numstocks), size=1)[0]
-    port_return = np.dot(weights, mean_returns)
-    port_volatility = np.sqrt(np.dot(weights.T, np.dot(cov_mat, weights)))
+    weights = np.random.dirichlet(np.ones(numstocks) * 0.5) # generate random weights
+    port_return = np.dot(weights, mean_annual_returns)
+    port_volatility = np.sqrt(np.dot(weights.T, np.dot(cov_mat_annual, weights)))
 
     # Append data
     rd_weights.append(weights)
@@ -112,13 +117,19 @@ random_portfolios['Returns'] = rd_returns
 random_portfolios['Volatility'] = rd_volatilities
 
 # Add the Sharpe Ratio
-rf = 0
+rf = 0      # risk-free rate
 
 random_portfolios['Sharpe'] = (random_portfolios['Returns'] - rf) / random_portfolios['Volatility']
 
-# Max Sharpe Ratio portfolio
-sorted_portfolios_s = random_portfolios.sort_values(by=['Sharpe'], ascending=False)
+print(random_portfolios['Sharpe'].describe()[['min', 'max']])
 
+    # result: Historical Sharpe ratios range from -2.51 to 3.44
+
+
+
+# Max Sharpe Ratio portfolio
+sorted_portfolios_s = random_portfolios.sort_values(by=['Sharpe'], ascending=False) # sort by sharpe ratios
+print(sorted_portfolios_s.head())
 MSR_weights = sorted_portfolios_s.iloc[0, 0:numstocks]
 MSR_weights_array = np.array(MSR_weights)
 
@@ -131,7 +142,7 @@ CumulativeReturns_MSR = ((1 + StockReturns["Portfolio_MSR"]).cumprod() - 1)
 
 
 # Global Minimum Variance Portfolio
-sorted_portfolios_v = random_portfolios.sort_values(by=['Volatility'], ascending=True)
+sorted_portfolios_v = random_portfolios.sort_values(by=['Volatility'], ascending=True)  # sort by volatilities
 
 GMV_weights = sorted_portfolios_v.iloc[0, 0:numstocks]
 GMV_weights_array = np.array(GMV_weights)
@@ -144,7 +155,7 @@ CumulativeReturns_GMV = ((1 + StockReturns["Portfolio_GMV"]).cumprod() - 1)
 
 
 
-# Compare the MSR Portfolio to the Market Cap Portfolio and the Equally Weighted Portfolio
+# Compare the different portfolios
 CumulativeReturns_EW.plot()
 CumulativeReturns_MCap.plot()
 CumulativeReturns_MSR.plot()
