@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Load the data
-USO = pd.read_csv('/workspaces/Python/Portfolio-Risk-Management/USO.csv', index_col='Date')
+USO = pd.read_csv('/workspaces/Python/Portfolio-Risk-Management/CSV/USO.csv', index_col='Date')
 
 # Cumulative returns
 cum_returns = (1 + USO).cumprod()
