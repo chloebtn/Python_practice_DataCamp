@@ -65,7 +65,7 @@ print("Annualized Variance: ", variance_annualized)
 
 
 
-# Skewness (third moment) of returns
+# Skewness of returns
 clean_returns = StockPrices['Returns'].dropna()  # drop missing values
 skew_returns = skew(clean_returns)  
 print("Third Moment (skewness): ", skew_returns)
