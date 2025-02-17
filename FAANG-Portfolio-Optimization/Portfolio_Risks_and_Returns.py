@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Load Data
-stock_prices_df = pd.read_csv('/workspaces/Python/Stock-Analysis/faang_stocks.csv', index_col='Date')
+stock_prices_df = pd.read_csv('/workspaces/Python/FAANG-Portfolio-Optimization/faang_stocks.csv', index_col='Date')
 
 # Changing the index to a datetime type allowing easier filtering and plotting
 stock_prices_df.index = pd.to_datetime(stock_prices_df.index)
@@ -75,3 +75,6 @@ plt.plot(ms_cumulative_returns, label='Max Sharpe Ratio Portfolio')
 plt.title('Optimized Portfolios Returns VS Benchmark')
 plt.legend()
 plt.show()
+
+
+
