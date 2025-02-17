@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Import data
-StockReturns = pd.read_csv("/workspaces/Python/Portfolio-Risk-Management/CSV/Big9Returns2017.csv", index_col=["Date"])
+StockReturns = pd.read_csv("/workspaces/Python/Big9-Portfolio-Optimization/Big9Returns2017.csv", index_col=["Date"])
 
 # Set portfolio weights
 portfolio_weights = np.array([0.12, 0.15, 0.08, 0.05, 0.09, 0.10, 0.11, 0.14, 0.16])
