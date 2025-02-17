@@ -73,8 +73,11 @@ plt.plot(benchmark_cumul_returns, label='Benchmark')
 plt.plot(mv_cumulative_returns, label='Min Volatility Portfolio')
 plt.plot(ms_cumulative_returns, label='Max Sharpe Ratio Portfolio')
 plt.title('Optimized Portfolios Returns VS Benchmark')
+plt.xticks(rotation=45)
 plt.legend()
 plt.show()
 
 
-
+# Portfolios stocks and weights
+print(f'Max Sharpe Ratios Portfolio stocks and respective weights:\n{mv_portfolio[mv_portfolio != 0]}')
+print(f'\nMinimum Volatility Portfolio stocks and respective weights:\n{ms_portfolio[ms_portfolio != 0]}')
