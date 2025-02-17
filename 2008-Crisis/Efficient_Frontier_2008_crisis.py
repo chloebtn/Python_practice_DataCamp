@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 # Load the data
-prices = pd.read_csv('/workspaces/Python/Portfolio-Risk-Management/CSV/crisis_portfolio.csv')
+prices = pd.read_csv('/workspaces/Python/2008-Crisis/crisis_portfolio.csv')
 
 prices['Date'] = pd.to_datetime(prices['Date'], format = '%d/%m/%Y')
 prices.set_index(['Date'], inplace = True)

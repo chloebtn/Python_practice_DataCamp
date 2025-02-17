@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-portfolio = pd.read_csv('/workspaces/Python/Portfolio-Risk-Management/CSV/crisis_portfolio.csv', index_col='Date')
+portfolio = pd.read_csv('/workspaces/Python/2008-Crisis/crisis_portfolio.csv', index_col='Date')
 portfolio.index = pd.to_datetime(portfolio.index)
 
 # Select portfolio asset prices from the middle of the crisis
@@ -47,7 +47,7 @@ plt.show()
 # Risk factor correlation
 
 # Load 90-day mortgage delinquency rate
-mort_del = pd.read_csv('/workspaces/Python/Portfolio-Risk-Management/CSV/mortgage_delinquency.csv', index_col='Date')
+mort_del = pd.read_csv('/workspaces/Python/2008-Crisis/mortgage_delinquency.csv', index_col='Date')
 mort_del.index = pd.to_datetime(mort_del.index)
 
 # reset portfolio_returns
