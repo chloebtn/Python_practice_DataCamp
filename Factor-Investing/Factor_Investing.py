@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Import and load data
-FamaFrenchData = pd.read_csv("/workspaces/Python/Portfolio-Risk-Management/CSV/FamaFrenchFactors.csv", index_col=["Date"])
+FamaFrenchData = pd.read_csv("/workspaces/Python/Factor-Investing/FamaFrenchFactors.csv", index_col=["Date"])
 
 
 
