@@ -54,13 +54,14 @@ CumulativeReturns_MCap = ((1 + StockReturns["Portfolio_MCap"]).cumprod() - 1)
 # Setting up the data for Max Sharpe Ratio and Global Minimum Variance Portfolios
 # The Correlation Matrix
 correlation_matrix = StockReturns.iloc[:, 0:numstocks].corr()   # taking only stock columns
-print(correlation_matrix)
 
 # Heatmap of the correlation matrix
 import seaborn as sns
 sns.heatmap(correlation_matrix, annot=True, cmap='Blues', linewidths=0.3, annot_kws={"size": 8})
+plt.gca().xaxis.tick_top()
 plt.xticks(rotation=90)
 plt.yticks(rotation=0)
+plt.title('Correlation Matrix')
 plt.show()
 
     # note: Amazon is most correlated with Facebook and Microsoft
@@ -69,14 +70,13 @@ plt.show()
 # The Covariance Matrix
 cov_mat = StockReturns.iloc[:, 0:numstocks].cov()
 cov_mat_annual = cov_mat * 252
-print(cov_mat_annual)
 
 
 # Portfolio standard deviation (from first portfolio above)
 portfolio_volatility = np.sqrt(np.dot(portfolio_weights.T, np.dot(cov_mat_annual, portfolio_weights)))
-print('Portfolio volatility:', portfolio_volatility)
+#print('Portfolio volatility:', portfolio_volatility)
 
-    # result: The portfolio volatility is 8.93%
+    # result: 8.93%
 
 
 
@@ -121,9 +121,9 @@ rf = 0      # risk-free rate
 
 random_portfolios['Sharpe'] = (random_portfolios['Returns'] - rf) / random_portfolios['Volatility']
 
-print(random_portfolios['Sharpe'].describe()[['min', 'max']])
+print(f'Historical Sharpe ratios range from {random_portfolios['Sharpe'].describe()['min']:.2f} to {random_portfolios['Sharpe'].describe()['max']:.2f}')
 
-    # result: Historical Sharpe ratios range from -2.51 to 3.44
+    # result: Historical Sharpe ratios range from -2.51 to 3.45
 
 
 
@@ -161,4 +161,5 @@ CumulativeReturns_MCap.plot()
 CumulativeReturns_MSR.plot()
 CumulativeReturns_GMV.plot()
 plt.legend()
+plt.title('Performance of the different portfolios')
 plt.show()
