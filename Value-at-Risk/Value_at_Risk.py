@@ -9,6 +9,7 @@ USO = pd.read_csv('/workspaces/Python/Value-at-Risk/USO.csv', index_col='Date')
 cum_returns = (1 + USO).cumprod()
 cum_returns.plot()
 plt.xticks(rotation=45)
+plt.title('USO Cumulative returns')
 plt.show()
 
 
@@ -20,6 +21,7 @@ running_max[running_max < 1] = 1 # Ensure the value is never less than 1
 drawdown = (cum_returns)/running_max - 1
 drawdown.plot()
 plt.xticks(rotation=45)
+plt.title('Historical drawdown')
 plt.show()
 
 # Historical value at risk (VaR)
@@ -63,6 +65,7 @@ plt.axvline(cvar_95, color='r', linestyle='--', linewidth=2, label='CVaR 95: {0:
 plt.axvline(var_90, color='g', linestyle='-', linewidth=2, label='VaR 90: {0:.2f}%'.format(var_90))
 plt.axvline(cvar_90, color='g', linestyle='--', linewidth=2, label='CVaR 90: {0:.2f}%'.format(cvar_90))
 plt.legend()
+plt.title('Historical Value at Risk')
 plt.show()
 
 
@@ -130,7 +133,7 @@ plt.show()
 
 
 # Monte Carlo simulation
-
+np.random.seed(8)
 # Loop through 100 simulations
 for i in range(0, 100):
     rand_rets = np.random.normal(mu, vol, T) + 1 
@@ -154,5 +157,5 @@ for i in range(0, 100):
 var_99 = np.percentile(sim_returns, 1)
 print('VaR 99: ', round(var_99 * 100, 2), '%')
 
-    # result: -5.04%
+    # result: -5.08%
     

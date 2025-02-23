@@ -17,6 +17,7 @@ import matplotlib.pyplot as plt
 mean_returns = mean_historical_return(prices, frequency = 252)
 
 plt.plot(mean_returns, linestyle = 'None', marker = 'o')
+plt.title('Historical Mean Returns')
 plt.show()
 
 # sample covariance matrix of returns
@@ -36,12 +37,14 @@ epochs = { 'before' : {'start': '1-1-2005', 'end': '31-12-2006'},
          }
 
 # Efficient covariance for each epoch
+print('\nEfficient Covariance Matrices')
 e_cov = {}
 for x in epochs.keys():
     sub_price = prices.loc[epochs[x]['start']:epochs[x]['end']]
     e_cov[x] = CovarianceShrinkage(sub_price).ledoit_wolf()
-
-print('Efficient Covariance Matrices\n', e_cov)
+    print(f'\n\nEpoch: {x}')
+    print(f'Start: {epochs[x]['start']}, End: {epochs[x]['end']}')
+    print('\n', e_cov[x])
 
     # The matrices show how the portfolio's risk increased during the crisis
 
@@ -75,13 +78,13 @@ ecov_after = CovarianceShrinkage(prices_after).ledoit_wolf()
 
 # Critical Line Algorithm
 efficient_portfolio_before = CLA(returns_before, ecov_before)
-print(efficient_portfolio_before.min_volatility())
+#print(efficient_portfolio_before.min_volatility())
 
 efficient_portfolio_during = CLA(returns_during, ecov_during)
-print(efficient_portfolio_during.min_volatility())
+#print(efficient_portfolio_during.min_volatility())
 
 efficient_portfolio_after = CLA(returns_after, ecov_after)
-print(efficient_portfolio_after.min_volatility())
+#print(efficient_portfolio_after.min_volatility())
 
 
 # Efficient frontiers before during after together
