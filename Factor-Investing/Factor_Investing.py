@@ -13,6 +13,7 @@ FamaFrenchData['Portfolio_Excess'] = FamaFrenchData['Portfolio'] - FamaFrenchDat
 # Cumulative returns
 CumulativeReturns = ((1 + FamaFrenchData[['Portfolio', 'Portfolio_Excess']]).cumprod() - 1)
 CumulativeReturns.plot()
+plt.title('Cumulative returns')
 plt.show()
 
 
@@ -33,7 +34,8 @@ print('The benchmark variance is', benchmark_variance)
 
 # Portofio Beta
 portfolio_beta = covariance_coefficient / benchmark_variance
-print('The portfolio beta is', portfolio_beta)
+print('\nThe portfolio beta is', portfolio_beta)
+print(f'For every 1% rise (fall) in the market, the portfolio is expected to rise (fall) by {portfolio_beta:.2f}%\n')
 
     # result: 0.9738
     # For every 1% rise (fall) in the market, the portfolio is expected to rise (fall) by 0.97%
@@ -46,14 +48,21 @@ import statsmodels.formula.api as smf
 capm_model = smf.ols(formula='Portfolio_Excess ~ Market_Excess', data=FamaFrenchData).fit()
 
 print('The CAPM model adjusted R-squared is', capm_model.rsquared_adj)
+print(f'The portfolio movements can be explained by {capm_model.rsquared_adj * 100:.2f}% by the market movements\n')
 
     # result: 0.7943
     # The portfolio movements can be explained by 79.43% by the market movements
+
 
 # Extract the beta
 regression_beta = capm_model.params['Market_Excess']
 
 print('The CAPM model beta is', regression_beta)
+
+if regression_beta == portfolio_beta:
+    print('Same as the beta calculated earlier\n')
+else:
+    print('Divergence with the beta calculated earlier\n')
 
     # result: 0.9738
     # Same as the beta calculated earlier
@@ -64,8 +73,14 @@ FamaFrench_model = smf.ols(formula='Portfolio_Excess ~ Market_Excess + SMB + HML
 
 print('The FamaFrench 3 factor model R-squared is', FamaFrench_model.rsquared_adj) 
 
+if FamaFrench_model.rsquared_adj > capm_model.rsquared_adj:
+    print('The 3 factors model explains more of the portfolio movements than the CAPM model\n')
+else:
+    print('The 3 factors model does not explain more of the portfolio movements than the CAPM model\n')
+
     # result: 0.8193
     # The 3 factors model explains more of the portfolio movements than the CAPM model
+
 
 # P-value of the SMB factor
 smb_pvalue = FamaFrench_model.pvalues['SMB']
@@ -77,6 +92,13 @@ else:
 
 smb_coeff = FamaFrench_model.params['SMB']
 print("The SMB coefficient is", smb_coeff, "and it is", significant_message)
+
+if smb_coeff < 0 and significant_message == 'significant':
+    print('The portfolio has a significant negative exposure to small-cap stocks and a positive exposure to large-cap stocks\n')
+elif smb_coeff > 0 and significant_message == 'significant':
+    print('The portfolio has a significant positive exposure to small-cap stocks and a negative exposure to large-cap stocks\n')
+else:
+    print('The results are not significant')
 
     # result: The SMB coefficient is -0.2621515274319262 and it is significant
     # The portfolio has a significant negative exposure to small-cap stocks and a positive exposure to large-cap stocks
@@ -92,17 +114,30 @@ else:
 hml_coeff = FamaFrench_model.params['HML']
 print("The HML coefficient is", hml_coeff, "and it is", significant_message)
 
+if smb_coeff < 0 and significant_message == 'significant':
+    print('The portfolio behaves more like a growth stock portfolio than a value stock portfolio\n')
+elif smb_coeff > 0 and significant_message == 'significant':
+    print('The portfolio behaves more like a value stock portfolio than a growth stock portfolio\n')
+else:
+    print('The results are not significant')
+
     # result: The HML coefficient is -0.10865715035429263 and it is significant
     # The portfolio behaves more like a growth stock portfolio than a value stock portfolio
 
+
 # Portfolio Alpha
 portfolio_alpha = FamaFrench_model.params['Intercept']
-print("The portfolio alpha is", portfolio_alpha)
+print('The portfolio alpha is', portfolio_alpha)
 
     # result: 0.01832%
 
 portfolio_alpha_annualized = ((1 + portfolio_alpha) ** 252) - 1
-print("The annualized portfolio alpha is", portfolio_alpha_annualized)
+print('The annualized portfolio alpha is', portfolio_alpha_annualized)
+
+if portfolio_alpha_annualized > 0:
+    print(f'The portfolio outperformed the benchmark by {portfolio_alpha_annualized * 100:.2f}% annualy\n')
+else:
+    print(f'The portfolio underperformed the benchmark by {portfolio_alpha_annualized * 100:.2f}% annualy\n')
 
     # result: 4.73%
     # The portfolio outperformed the benchmark by 4.73% annually
@@ -111,6 +146,11 @@ print("The annualized portfolio alpha is", portfolio_alpha_annualized)
 FamaFrench5_model = smf.ols(formula='Portfolio_Excess ~ Market_Excess + SMB + HML + RMW + CMA', data=FamaFrenchData).fit()
 
 print('The FamaFrench 5 factor model R-squared is', FamaFrench5_model.rsquared_adj)
+
+if FamaFrench5_model.rsquared_adj > FamaFrench_model.rsquared_adj:
+    print('The 5 factors model explains more of the portfolio movements than the 3 factors model\n')
+else:
+    print('The 5 factors model does not explain more of the portfolio movements than the 3 factors model\n')
 
     # result: 0.8367
     # The 5 factors model explains more of the portfolio movements than the 3 factors model
