@@ -23,6 +23,4 @@ It will be interesting to see how the optimization methods dealt with that stock
 #### Selected stocks and weights:
 <img width="361" alt="image" src="https://github.com/user-attachments/assets/b2810015-d795-40a8-94c8-c27264a94483" />
 
-It is interesting to see that the max sharpe portfolio chose four out of the five stocks, including the 3 more stable stocks apple amazon and google, and slightly balanced them with the netflix stock, which, we observed earlier, is a lot more volatile although it did get more stable after 2022, but do offer much higher returns. The meta stock, him, has been left out.
 
-The minimum volatility portfolio chose to put more than 81% of it's weight into apple, which based on the precedent plot seems reasonable considering that it appears to be the most stable one out of the five. The Netflix stock was once again selected with 0.5% of total weight.
